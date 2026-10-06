@@ -1,0 +1,20 @@
+CARA PASANG PAPER LAB DI HP (pilih salah satu)
+
+A. TERCEPAT, Netlify Drop (gratis, 2 menit, dari laptop):
+ 1. Ekstrak zip ini.
+ 2. Buka https://app.netlify.com/drop lalu drag folder hasil ekstrak ke halaman tersebut.
+ 3. Anda mendapat link https://xxxx.netlify.app. Kirim link itu ke HP (WA/email).
+ 4. iPhone: buka di Safari > Share > Add to Home Screen.
+    Android: buka di Chrome > menu > Install app / Add to Home screen.
+ Opsional: buat akun Netlify gratis supaya link tidak kedaluwarsa.
+
+B. GitHub Pages (gratis, permanen):
+ Buat repo baru > upload semua file > Settings > Pages > Branch main > Save.
+ Link: https://<username>.github.io/<repo>/
+
+C. Tanpa hosting (cadangan):
+ Android: kirim index.html ke HP, buka lewat Chrome (file manager > open with Chrome).
+ iPhone: file HTML lokal tidak bisa menjalankan aplikasi dengan baik di app Files. Gunakan opsi A/B.
+
+Catatan: data candle tersimpan di HP. iPhone dapat menghapus data situs yang tidak dibuka >7 hari
+(kecuali sudah di-Add to Home Screen); aplikasi akan otomatis mengunduh ulang.

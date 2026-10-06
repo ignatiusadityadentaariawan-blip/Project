@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paper Lab">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Paper Lab Mobile</title>
+<style>
+:root{--bg:#0d1117;--pn:#161b22;--pn2:#1f2733;--bd:#2b3442;--tx:#e6edf3;--mu:#8b98a9;--ac:#3b82f6;--gr:#22c55e;--rd:#ef4444;--yl:#eab308;
+--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overscroll-behavior-y:contain}
+header{position:sticky;top:0;z-index:9;background:rgba(13,17,23,.95);backdrop-filter:blur(8px);padding:calc(var(--st) + 10px) 14px 8px;border-bottom:1px solid var(--bd)}
+.hrow{display:flex;align-items:center;gap:8px}h1{font-size:18px;margin:0;flex:1}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mu);display:inline-block}.dot.ok{background:var(--gr)}.dot.warn{background:var(--yl)}.dot.err{background:var(--rd)}
+.sub{font-size:11px;color:var(--mu);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.ib{background:var(--pn2);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:7px 11px;font-size:14px}
+main{padding:12px 12px calc(84px + var(--sb))}
+.pg{display:none}.pg.on{display:block}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:9;display:flex;background:rgba(22,27,34,.97);backdrop-filter:blur(8px);border-top:1px solid var(--bd);padding-bottom:var(--sb)}
+nav a{flex:1;text-align:center;padding:8px 0 7px;color:var(--mu);font-size:10.5px;text-decoration:none}nav a b{display:block;font-size:20px;line-height:24px;font-weight:400}nav a.on{color:var(--ac)}
+.card{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:10px}
+h2{font-size:15px;margin:0 0 8px}h3{font-size:12px;color:var(--mu);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.mu{color:var(--mu)}.up{color:var(--gr)}.dn{color:var(--rd)}.sm{font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{background:var(--pn2);border-radius:10px;padding:9px;text-align:center}.kpi .v{font-size:20px;font-weight:700}.kpi .l{font-size:10.5px;color:var(--mu)}
+.hs{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -12px;padding:0 12px 4px}.hs::-webkit-scrollbar{display:none}
+.mk{min-width:150px;scroll-snap-align:start;background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:11px}
+.mk .s{font-size:12px;color:var(--mu)}.mk .p{font-size:19px;font-weight:700;margin:2px 0}.mk .r{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu)}
+.badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:9px;white-space:nowrap}.PASS{background:#14532d;color:#86efac}.FAIL{background:#5b1a1a;color:#fca5a5}.COLLECTING{background:#4a3c0b;color:#fde68a}
+.vc{background:var(--pn);border:1px solid var(--bd);border-radius:14px;margin-bottom:9px;overflow:hidden}
+.vh{display:flex;align-items:center;gap:10px;padding:12px}.vh .t{flex:1;min-width:0}.vh .n{font-weight:700}.vh .d{font-size:11.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vh .pnl{text-align:right;font-weight:700}.vh .pnl small{display:block;font-weight:400;font-size:10.5px;color:var(--mu)}
+.vb{display:none;border-top:1px solid var(--bd);padding:10px 12px;background:#121820}.vc.open .vb{display:block}
+.seg{display:flex;background:var(--pn2);border-radius:10px;padding:3px;gap:3px;margin-bottom:10px}.seg a{flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:13px;color:var(--mu)}.seg a.on{background:var(--ac);color:#fff}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.mg div{background:var(--pn2);border-radius:8px;padding:6px 8px}.mg b{display:block;font-size:14px}.mg span{font-size:10.5px;color:var(--mu)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:13px}.row:last-child{border:0}
+.pos{padding:9px 0;border-bottom:1px solid var(--bd)}.pos:last-child{border:0}.pos .a{display:flex;justify-content:space-between;font-weight:600}.pos .b{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu);margin-top:2px}
+.tr{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.ev{padding:10px 0;border-bottom:1px solid var(--bd)}.ev:last-child{border:0}.ev .w{font-size:12px;color:var(--mu);margin-top:3px}.ev .x{font-size:12px;color:#93c5fd;margin-top:3px}
+.ev input,.ev textarea{width:100%;margin-top:4px}
+input,select,textarea{background:var(--pn2);color:var(--tx);border:1px solid var(--bd);border-radius:9px;padding:9px 10px;font:inherit;font-size:16px}
+textarea{width:100%;min-height:80px}
+.btn{display:block;width:100%;background:var(--ac);color:#fff;border:0;border-radius:11px;padding:12px;font-size:15px;font-weight:600;margin-top:8px}.btn.sec{background:var(--pn2);border:1px solid var(--bd);color:var(--tx)}
+.chk label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd);font-size:14px}.chk input{width:22px;height:22px;accent-color:var(--gr)}
+.fld{margin-bottom:10px}.fld label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px}.fld input{width:100%}
+#load{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px;text-align:center}
+.bar{width:100%;max-width:320px;height:8px;background:var(--pn2);border-radius:5px;overflow:hidden;margin:14px 0}.bar div{height:100%;width:0;background:var(--ac);transition:width .2s}
+.warn{background:#3b2a0a;border:1px solid #6b5a12;color:#fde68a;border-radius:10px;padding:9px 11px;font-size:12.5px;margin-bottom:10px}
+canvas{width:100%;height:220px;display:block}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + var(--sb));background:#1f2937;border:1px solid var(--bd);padding:9px 14px;border-radius:10px;font-size:13px;z-index:30;display:none}
+</style>
+</head>
+<body>
+<div id="load"><div style="font-size:42px">⚡</div><h2>Paper Lab Mobile</h2><div id="lt" class="mu sm">Menyiapkan…</div><div class="bar"><div id="lb"></div></div>
+  <div class="mu sm">Load pertama mengunduh histori dari Binance (±1–3 menit, ±15–25 MB). Pakai Wi-Fi kalau bisa. Load berikutnya hanya mengambil candle baru.</div>
+  <button class="btn sec" id="btnSkip" style="max-width:320px;display:none">Tutup</button></div>
+
+<header>
+  <div class="hrow"><h1>⚡ Paper Lab</h1><span class="dot" id="dWs"></span><button class="ib" id="btnR">↻</button></div>
+  <div class="sub"><span id="sSrc">Data: -</span><span id="sUpd">Update: -</span><span id="sRev">Review: -</span></div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section class="pg on" id="p-home">
+    <div class="card"><div class="kpis">
+      <div class="kpi"><div class="v up" id="kPass">-</div><div class="l">PASS</div></div>
+      <div class="kpi"><div class="v" id="kOpen">-</div><div class="l">Posisi terbuka</div></div>
+      <div class="kpi"><div class="v" id="kPnl">-</div><div class="l">FWD net total</div></div></div>
+      <div class="sm mu" style="margin-top:8px" id="kFwd"></div></div>
+    <h3>Pasar live</h3>
+    <div class="hs" id="mk"></div>
+    <h3>Posisi paper terbuka</h3>
+    <div class="card" id="openList"></div>
+    <h3>Event berikutnya</h3>
+    <div class="card" id="nextEv"></div>
+  </section>
+
+  <!-- VARIANTS -->
+  <section class="pg" id="p-var">
+    <div class="seg" id="segPh"><a data-ph="mf" class="on">Forward</a><a data-ph="mo">OOS</a><a data-ph="mb">Backtest</a></div>
+    <div id="vList"></div>
+    <div class="sm mu">Tap kartu untuk melihat detail. Status pakai data Forward kalau sudah ada trade; kalau belum, pakai OOS.</div>
+  </section>
+
+  <!-- CHART -->
+  <section class="pg" id="p-chart">
+    <div class="card"><h2>Kurva equity</h2>
+      <div class="seg" id="segCh"><a data-ph="fwd" class="on">Forward</a><a data-ph="oos">OOS</a><a data-ph="bt">Backtest</a></div>
+      <select id="chV" style="width:100%;margin-bottom:8px"></select>
+      <canvas id="cv"></canvas>
+      <div class="sm mu" id="chInfo" style="margin-top:6px"></div></div>
+    <div class="card"><h2>Trade terakhir</h2><div id="trList"></div></div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="pg" id="p-rev">
+    <div class="card"><h2>Review harian 08:00 WIB</h2><div class="chk" id="chk"></div>
+      <h3>Catatan keputusan</h3><textarea id="note" placeholder="Contoh: V4 lanjut, V10 FAIL. Tidak ada perubahan parameter."></textarea>
+      <button class="btn" id="btnLog">✔ Simpan review hari ini</button></div>
+    <div class="card"><h2>Riset & kalender</h2><div id="resList"></div>
+      <button class="btn sec" id="btnResEdit">✎ Edit riset</button></div>
+    <div class="card"><h2>Log review</h2><div id="logList"></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="pg" id="p-set">
+    <div class="card"><h2>Pasang di layar utama</h2>
+      <div class="sm"><b>iPhone (Safari):</b> tombol Share ⬆︎ → <i>Add to Home Screen</i>.<br><b>Android (Chrome):</b> menu ⋮ → <i>Add to Home screen / Install app</i>.<br>
+      <span class="mu">Setelah dipasang, aplikasi tampil layar penuh seperti app biasa, dan data tersimpan di HP.</span></div></div>
+    <div class="card"><h2>Pengaturan</h2><div id="setBox"></div>
+      <div class="fld"><label><input type="checkbox" id="fs" style="width:auto"> Paksa sumber data spot (pakai kalau futures diblokir)</label></div>
+      <button class="btn" id="btnSave">Simpan & hitung ulang</button>
+      <button class="btn sec" id="btnClear">Hapus cache data</button></div>
+    <div class="card"><h2>Syarat lolos (go-live gate)</h2><div id="gateBox"></div></div>
+    <div class="card sm mu">Engine identik dengan versi Python/HTML: risk 10 USDT/trade termasuk fee, sinyal dari candle yang sudah close, entry di open candle berikutnya, kalau SL & TP kena di candle yang sama dihitung SL. Alat simulasi & edukasi, bukan saran investasi.</div>
+  </section>
+</main>
+
+<nav id="nav">
+  <a data-p="home" class="on"><b>⌂</b>Home</a><a data-p="var"><b>☰</b>Varian</a><a data-p="chart"><b>↗</b>Grafik</a><a data-p="rev"><b>✓</b>Review</a><a data-p="set"><b>⚙</b>Setting</a>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script id="engineSrc">
+const CFG = {
+  START_BALANCE: 1000, RISK: 10, FEE_FUT: 0.0005, FEE_SPOT: 0.0010, SLIP: 0.0002,
+  DATA_START: "2023-10-01", SPLIT: "2025-10-01", FORWARD_START: "2026-10-07T00:00:00Z",
+  CRITERIA: { min_trades: 30, min_pf: 1.20, min_exp_r: 0.10, max_dd_pct: 10.0, max_decay: 0.50 }
+};
+const VARIANTS = [
+ {id:"V1", name:"Guardian", profile:"Ultra-konservatif", market:"spot", tf:"1d", symbols:["BTCUSDT"], logic:"donchian", n:20, trend:200, dir:"long", sl_atr:2.5, tp_r:null, trail_atr:3.0, max_pos:1, max_lev:1, day_cap:20, time_stop:null},
+ {id:"V2", name:"Steady", profile:"Konservatif", market:"fut", tf:"4h", symbols:["BTCUSDT","ETHUSDT"], logic:"pullback", n:20, trend:200, dir:"long", sl_atr:2.0, tp_r:2.0, trail_atr:null, max_pos:2, max_lev:2, day_cap:20, time_stop:null},
+ {id:"V3", name:"Trend Rider", profile:"Moderat-konservatif", market:"fut", tf:"4h", symbols:["BTCUSDT","ETHUSDT"], logic:"donchian", n:55, trend:200, dir:"both", sl_atr:2.0, tp_r:null, trail_atr:3.0, max_pos:2, max_lev:3, day_cap:20, time_stop:null},
+ {id:"V4", name:"Mean Revert", profile:"Moderat", market:"fut", tf:"1h", symbols:["BTCUSDT","ETHUSDT"], logic:"rsi2", n:2, trend:200, dir:"both", sl_atr:1.5, tp_r:1.2, trail_atr:null, max_pos:2, max_lev:3, day_cap:30, time_stop:24},
+ {id:"V5", name:"Balanced Basket", profile:"Moderat", market:"fut", tf:"4h", symbols:["BTCUSDT","ETHUSDT","SOLUSDT"], logic:"emacross", n:21, trend:55, dir:"both", sl_atr:2.0, tp_r:2.5, trail_atr:null, max_pos:3, max_lev:3, day_cap:30, time_stop:null},
+ {id:"V6", name:"Momentum", profile:"Moderat-agresif", market:"fut", tf:"1h", symbols:["BTCUSDT","ETHUSDT","SOLUSDT"], logic:"donchian_vol", n:24, trend:200, dir:"both", sl_atr:1.5, tp_r:2.5, trail_atr:null, max_pos:3, max_lev:5, day_cap:30, time_stop:null},
+ {id:"V7", name:"Supertrend", profile:"Agresif", market:"fut", tf:"1h", symbols:["BTCUSDT","ETHUSDT"], logic:"supertrend", n:10, trend:null, dir:"both", sl_atr:1.5, tp_r:null, trail_atr:2.0, max_pos:2, max_lev:5, day_cap:40, time_stop:null},
+ {id:"V8", name:"Alt Hunter", profile:"Agresif", market:"fut", tf:"1h", symbols:["SOLUSDT","BNBUSDT","XRPUSDT"], logic:"donchian", n:48, trend:200, dir:"both", sl_atr:1.5, tp_r:3.0, trail_atr:null, max_pos:3, max_lev:5, day_cap:40, time_stop:null},
+ {id:"V9", name:"Scalper", profile:"Sangat agresif", market:"fut", tf:"15m", symbols:["BTCUSDT","ETHUSDT"], logic:"bollinger", n:20, trend:200, dir:"both", sl_atr:1.0, tp_r:1.0, trail_atr:null, max_pos:2, max_lev:10, day_cap:50, time_stop:16},
+ {id:"V10", name:"Max Aggro", profile:"Ekstrem", market:"fut", tf:"15m", symbols:["BTCUSDT","ETHUSDT","SOLUSDT"], logic:"donchian", n:20, trend:200, dir:"both", sl_atr:1.0, tp_r:3.0, trail_atr:null, max_pos:5, max_lev:10, day_cap:50, time_stop:null},
+];
+const TF_MS = { "15m": 9e5, "1h": 36e5, "4h": 144e5, "1d": 864e5 };
+function ewm(a, k) { const o = new Float64Array(a.length); let p = NaN;
+  for (let i = 0; i < a.length; i++) { const x = a[i]; if (!Number.isNaN(x)) p = Number.isNaN(p) ? x : p + k * (x - p); o[i] = p; } return o; }
+const ema = (a, n) => ewm(a, 2 / (n + 1));
+const wilder = (a, n) => ewm(a, 1 / n);
+function atr(d, n = 14) { const N = d.c.length, tr = new Float64Array(N);
+  for (let i = 0; i < N; i++) tr[i] = i === 0 ? d.h[i] - d.l[i] : Math.max(d.h[i] - d.l[i], Math.abs(d.h[i] - d.c[i-1]), Math.abs(d.l[i] - d.c[i-1]));
+  return wilder(tr, n); }
+function rsi(c, n) { const N = c.length, up = new Float64Array(N), dn = new Float64Array(N); up[0] = dn[0] = NaN;
+  for (let i = 1; i < N; i++) { const x = c[i] - c[i-1]; up[i] = Math.max(x, 0); dn[i] = Math.max(-x, 0); }
+  const U = wilder(up, n), D = wilder(dn, n), o = new Float64Array(N);
+  for (let i = 0; i < N; i++) o[i] = D[i] === 0 ? NaN : 100 - 100 / (1 + U[i] / D[i]); return o; }
+function adx(d, n = 14) { const N = d.c.length, p = new Float64Array(N), m = new Float64Array(N);
+  for (let i = 1; i < N; i++) { const u = d.h[i] - d.h[i-1], w = d.l[i-1] - d.l[i]; p[i] = (u > w && u > 0) ? u : 0; m[i] = (w > u && w > 0) ? w : 0; }
+  const a = atr(d, n), P = wilder(p, n), M = wilder(m, n), dx = new Float64Array(N);
+  for (let i = 0; i < N; i++) { const pi = 100 * P[i] / a[i], mi = 100 * M[i] / a[i]; dx[i] = 100 * Math.abs(pi - mi) / (pi + mi); }
+  return wilder(dx, n); }
+function rollMaxPrev(a, n) { const o = new Float64Array(a.length).fill(NaN); for (let i = n; i < a.length; i++) { let m = -Infinity; for (let j = i - n; j < i; j++) m = Math.max(m, a[j]); o[i] = m; } return o; }
+function rollMinPrev(a, n) { const o = new Float64Array(a.length).fill(NaN); for (let i = n; i < a.length; i++) { let m = Infinity; for (let j = i - n; j < i; j++) m = Math.min(m, a[j]); o[i] = m; } return o; }
+function rollMean(a, n) { const o = new Float64Array(a.length).fill(NaN); let s = 0; for (let i = 0; i < a.length; i++) { s += a[i]; if (i >= n) s -= a[i-n]; if (i >= n - 1) o[i] = s / n; } return o; }
+function rollStd(a, n) { const o = new Float64Array(a.length).fill(NaN); for (let i = n - 1; i < a.length; i++) { let s = 0, q = 0; for (let j = i - n + 1; j <= i; j++) { s += a[j]; } const mu = s / n; for (let j = i - n + 1; j <= i; j++) q += (a[j] - mu) ** 2; o[i] = Math.sqrt(q / (n - 1)); } return o; }
+function signals(d, v) {
+  const c = d.c, N = c.length, n = v.n, sig = new Int8Array(N);
+  const et = v.trend ? ema(c, v.trend) : null, up = i => et ? c[i] > et[i] : true;
+  const both = v.dir === "both"; let L = v.logic;
+  if (L === "donchian" || L === "donchian_vol") {
+    const hh = rollMaxPrev(d.h, n), ll = rollMinPrev(d.l, n), va = L === "donchian_vol" ? rollMean(d.v, 20) : null;
+    for (let i = 0; i < N; i++) { const vf = va ? d.v[i] > 1.5 * va[i] : true;
+      if (c[i] > hh[i] && up(i) && vf) sig[i] = 1; else if (both && c[i] < ll[i] && !up(i) && vf) sig[i] = -1; }
+  } else if (L === "pullback") {
+    const e20 = ema(c, n), e50 = ema(c, 50), e200 = ema(c, 200), r = rsi(c, 14);
+    for (let i = 1; i < N; i++) if (e50[i] > e200[i] && d.l[i-1] <= e20[i-1] && c[i] > e20[i] && r[i] > 40) sig[i] = 1;
+  } else if (L === "rsi2") {
+    const r = rsi(c, 2);
+    for (let i = 0; i < N; i++) { if (r[i] < 10 && up(i)) sig[i] = 1; else if (both && r[i] > 90 && !up(i)) sig[i] = -1; }
+  } else if (L === "emacross") {
+    const f = ema(c, n), s = ema(c, v.trend), a = adx(d);
+    for (let i = 1; i < N; i++) { if (!(a[i] > 20)) continue;
+      if (f[i] > s[i] && f[i-1] <= s[i-1]) sig[i] = 1; else if (both && f[i] < s[i] && f[i-1] >= s[i-1]) sig[i] = -1; }
+  } else if (L === "supertrend") {
+    const a = atr(d, n), fu = new Float64Array(N), fl = new Float64Array(N), t = new Int8Array(N); t[0] = 1;
+    for (let i = 0; i < N; i++) { const hl = (d.h[i] + d.l[i]) / 2, ub = hl + 3 * a[i], lb = hl - 3 * a[i];
+      if (i === 0) { fu[0] = ub; fl[0] = lb; continue; }
+      fu[i] = (ub < fu[i-1] || c[i-1] > fu[i-1]) ? ub : fu[i-1];
+      fl[i] = (lb > fl[i-1] || c[i-1] < fl[i-1]) ? lb : fl[i-1];
+      t[i] = c[i] > fu[i-1] ? 1 : c[i] < fl[i-1] ? -1 : t[i-1];
+      if (t[i] === 1 && t[i-1] === -1) sig[i] = 1; else if (both && t[i] === -1 && t[i-1] === 1) sig[i] = -1; }
+  } else if (L === "bollinger") {
+    const m = rollMean(c, n), sd = rollStd(c, n);
+    for (let i = 0; i < N; i++) { if (c[i] < m[i] - 2 * sd[i] && up(i)) sig[i] = 1; else if (both && c[i] > m[i] + 2 * sd[i] && !up(i)) sig[i] = -1; }
+  }
+  return sig;
+}
+function run(v, data, start, end, balance = CFG.START_BALANCE, cfg = CFG) {
+  const fee = (v.market === "spot" ? cfg.FEE_SPOT : cfg.FEE_FUT) + cfg.SLIP, RISK = cfg.RISK;
+  const A = {}, tset = new Set();
+  for (const s of Object.keys(data)) { const d = data[s]; const pos = new Map(); d.t.forEach((t, i) => { pos.set(t, i); tset.add(t); });
+    A[s] = { ...d, pos, sig: signals(d, v), atr: atr(d) }; }
+  const idx = [...tset].filter(t => (start == null || t >= start) && (end == null || t < end)).sort((a, b) => a - b);
+  let eq = balance; const P = {}, trades = [], curve = [], dayPnl = new Map();
+  for (const t of idx) { const day = Math.floor(t / 864e5);
+    for (const s in A) { const a = A[s], i = a.pos.get(t); if (i === undefined) continue;
+      const o = a.o[i], h = a.h[i], l = a.l[i], c = a.c[i];
+      if (!P[s] && i > 0) { const sg = a.sig[i-1], pa = a.atr[i-1];
+        if (sg !== 0 && Object.keys(P).length < v.max_pos && (dayPnl.get(day) || 0) > -v.day_cap && eq > 0 && !Number.isNaN(pa)) {
+          const dist = v.sl_atr * pa; let qty = RISK / (dist + 2 * o * fee);
+          const used = Object.values(P).reduce((x, q) => x + q.entry * q.qty, 0);
+          qty = Math.min(qty, Math.max(0, v.max_lev * eq - used) / o);
+          if (qty > 0) P[s] = { side: sg, entry: o, qty, sl: o - sg * dist, t, bars: 0, tp: v.tp_r ? o + sg * v.tp_r * dist : null, dist };
+        } }
+      if (P[s]) { const p = P[s], sd = p.side; p.bars++; let px = null, why;
+        const hitSL = sd === 1 ? l <= p.sl : h >= p.sl, hitTP = p.tp != null && (sd === 1 ? h >= p.tp : l <= p.tp);
+        if (hitSL) { px = sd === 1 ? Math.min(p.sl, o) : Math.max(p.sl, o); why = (px - p.entry) * sd > 0 ? "TRAIL" : "SL"; }
+        else if (hitTP) { px = p.tp; why = "TP"; }
+        else if (v.time_stop && p.bars >= v.time_stop) { px = c; why = "TIME"; }
+        if (px !== null) { const gross = (px - p.entry) * p.qty * sd, fees = (p.entry + px) * p.qty * fee, pnl = gross - fees;
+          eq += pnl; dayPnl.set(day, (dayPnl.get(day) || 0) + pnl);
+          trades.push({ variant: v.id, symbol: s, side: sd === 1 ? "LONG" : "SHORT", entry_time: p.t, exit_time: t, entry: p.entry, exit: px,
+                        qty: p.qty, notional: p.entry * p.qty, pnl, fees, R: pnl / RISK, reason: why, bars: p.bars });
+          delete P[s];
+        } else if (v.trail_atr) { const ns = c - sd * v.trail_atr * a.atr[i]; p.sl = sd === 1 ? Math.max(p.sl, ns) : Math.min(p.sl, ns); } } }
+    let u = 0; for (const s in P) { const i = A[s].pos.get(t); if (i !== undefined) u += (A[s].c[i] - P[s].entry) * P[s].qty * P[s].side; }
+    curve.push([t, eq + u]); }
+  const open = Object.entries(P).map(([s, p]) => ({ variant: v.id, symbol: s, ...p, lastClose: A[s].c[A[s].c.length - 1] }));
+  return { trades, curve, open, eq };
+}
+function metrics(tr, curve, balance = CFG.START_BALANCE) {
+  const z = { trades: 0, win_rate: 0, pf: 0, exp_r: 0, net: 0, ret_pct: 0, max_dd: 0, max_dd_pct: 0, fees: 0, avg_bars: 0, max_losing_streak: 0, sharpe: 0 };
+  if (!tr.length) return z;
+  let w = 0, l = 0, f = 0, b = 0, R = 0, st = 0, mx = 0, wins = 0;
+  for (const x of tr) { if (x.pnl > 0) { w += x.pnl; wins++; st = 0; } else { l -= x.pnl; st++; mx = Math.max(mx, st); } f += x.fees; b += x.bars; R += x.R; }
+  let pk = -Infinity, dd = 0, ddp = 0; for (const [, e] of curve) { pk = Math.max(pk, e); dd = Math.max(dd, pk - e); ddp = Math.max(ddp, (pk - e) / pk * 100); }
+  const daily = new Map(); for (const [t, e] of curve) daily.set(Math.floor(t / 864e5), e);
+  const ks = [...daily.keys()].sort((a, b) => a - b), dr = [];
+  for (let i = 1; i < ks.length; i++) { const prev = daily.get(ks[i-1]), cur = daily.get(ks[i]); if (ks[i] - ks[i-1] === 1) dr.push(cur / prev - 1); }
+  const mu = dr.reduce((a, x) => a + x, 0) / (dr.length || 1), sdv = Math.sqrt(dr.reduce((a, x) => a + (x - mu) ** 2, 0) / Math.max(1, dr.length - 1));
+  const net = w - l;
+  return { trades: tr.length, win_rate: wins / tr.length, pf: l ? w / l : Infinity, exp_r: R / tr.length, net, ret_pct: net / balance * 100,
+           max_dd: dd, max_dd_pct: ddp, fees: f, avg_bars: b / tr.length, max_losing_streak: mx, sharpe: sdv > 0 ? mu / sdv * Math.sqrt(365) : 0 };
+}
+function gateStatus(bt, oos, fwd, C = CFG.CRITERIA) {
+  const m = (fwd && fwd.trades > 0) ? fwd : (oos || {}), basis = (fwd && fwd.trades > 0) ? "FWD" : "OOS";
+  if ((m.trades || 0) < C.min_trades) return { status: "COLLECTING", basis };
+  const btE = bt ? bt.exp_r : 0, decayOk = btE <= 0 || m.exp_r >= btE * (1 - C.max_decay);
+  const ok = m.pf >= C.min_pf && m.exp_r >= C.min_exp_r && m.max_dd_pct <= C.max_dd_pct && decayOk;
+  return { status: ok ? "PASS" : "FAIL", basis };
+}
+
+</script>
+<script>
+// ===================== MOBILE APP =====================
+const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+const fmt = (x, d = 2) => (x == null || !isFinite(x)) ? "-" : Number(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const sgn = (x, d = 2) => `<span class="${x > 0 ? "up" : x < 0 ? "dn" : ""}">${x > 0 ? "+" : ""}${fmt(x, d)}</span>`;
+const LS = { get: (k, d) => { try { return JSON.parse(localStorage.getItem("cplm_" + k)) ?? d; } catch { return d; } }, set: (k, v) => { try { localStorage.setItem("cplm_" + k, JSON.stringify(v)); } catch {} } };
+const toast = t => { const e = $("#toast"); e.textContent = t; e.style.display = "block"; clearTimeout(e._t); e._t = setTimeout(() => e.style.display = "none", 2200); };
+const DEF_CFG = JSON.parse(JSON.stringify(CFG));
+Object.assign(CFG, LS.get("cfg", {})); CFG.CRITERIA = Object.assign({}, DEF_CFG.CRITERIA, LS.get("crit", {}));
+let FORCE_SPOT = LS.get("forceSpot", false);
+const VARS = VARIANTS, SYMS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT"];
+const DEF_RES = [
+ { d: "Kam 8 Okt 00:00", e: "US 10Y Note Auction USD 39bn", w: "10Y sempat 5.34% (tertinggi ~24 thn). Lelang lemah → yield naik → tekanan ke BTC.", a: "V9/V10: jangan buka posisi baru 23:00–03:00 WIB", t: "2026-10-08T00:00+07:00" },
+ { d: "Kam 8 Okt ~01:00", e: "FOMC Minutes", w: "Petunjuk peluang hike 28 Okt. Nada hawkish → risk-off.", a: "Blackout untuk varian 15m", t: "2026-10-08T01:00+07:00" },
+ { d: "Jum 9 Okt 21:00", e: "UMich Sentiment & Inflation Exp.", w: "Ekspektasi inflasi jangka panjang 3.4% (Sep).", a: "Pantau", t: "2026-10-09T21:00+07:00" },
+ { d: "Rab 14 Okt 19:30", e: "US CPI September", w: "Data inflasi terbesar sebelum FOMC.", a: "Blackout 15m & 1h 18:30–21:30 WIB", t: "2026-10-14T19:30+07:00" },
+ { d: "Kam 29 Okt 01:00", e: "FOMC decision", w: "Pasar terbelah soal hike kedua (~47%).", a: "Blackout semua varian intraday", t: "2026-10-29T01:00+07:00" },
+ { d: "Level", e: "BTC support 82.5k | resist 86.7k & 87.57k", w: "Daily close di atas 87.6k membuka jalan ke 90k+; tembus 82.5k bisa ke 76–80k.", a: "Mean reversion (V4) diuntungkan; breakout rawan false break", t: "" }];
+let RES = LS.get("research", DEF_RES), LOG = LS.get("log", []);
+const CHK = ["Status PASS / FAIL / COLLECTING", "Drawdown forward < 10%, rugi per trade ≤ 10 USDT", "Pasar: tren, funding, Fear & Greed", "Event & jam blackout", "Keputusan: lanjut / pause / kill (tanpa ubah parameter)", "Update riset untuk besok"];
+const wibDate = () => new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+
+// ---------- IndexedDB ----------
+const IDB = { db: null,
+  open() { return new Promise(r => { let q; try { q = indexedDB.open("cplm", 1); } catch { return r(); } q.onupgradeneeded = () => q.result.createObjectStore("k"); q.onsuccess = () => { this.db = q.result; r(); }; q.onerror = () => r(); }); },
+  get(k) { return new Promise(r => { if (!this.db) return r(null); try { const q = this.db.transaction("k").objectStore("k").get(k); q.onsuccess = () => r(q.result || null); q.onerror = () => r(null); } catch { r(null); } }); },
+  put(k, v) { return new Promise(r => { if (!this.db) return r(); try { const tx = this.db.transaction("k", "readwrite"); tx.objectStore("k").put(v, k); tx.oncomplete = r; tx.onerror = r; } catch { r(); } }); },
+  clear() { return new Promise(r => { if (!this.db) return r(); const tx = this.db.transaction("k", "readwrite"); tx.objectStore("k").clear(); tx.oncomplete = r; }); } };
+
+// ---------- data ----------
+const EP = { fut: ["https://fapi.binance.com/fapi/v1/klines", 1500], spot: ["https://data-api.binance.vision/api/v3/klines", 1000] };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function getJSON(u) { const c = new AbortController(), t = setTimeout(() => c.abort(), 20000); try { const r = await fetch(u, { signal: c.signal }); if (!r.ok) throw new Error("HTTP " + r.status); return await r.json(); } finally { clearTimeout(t); } }
+let usedSpotFallback = false; const prog = { done: 0, total: 1 };
+function setProg(t) { $("#lb").style.width = Math.min(100, prog.done / Math.max(1, prog.total) * 100) + "%"; $("#lt").textContent = t || `Mengunduh data… ${prog.done}/${prog.total}`; }
+async function fetchFeed(market, sym, tf, startMs, spot) {
+  const mk = spot ? "spot" : market, key = `${mk}_${sym}_${tf}`;
+  let d = await IDB.get(key) || { t: [], o: [], h: [], l: [], c: [], v: [] };
+  if (d.t.length && d.t[0] > startMs) d = { t: [], o: [], h: [], l: [], c: [], v: [] };
+  let s = d.t.length ? d.t[d.t.length - 1] + TF_MS[tf] : startMs;
+  try {
+    const [url, lim] = EP[mk];
+    while (s < Date.now() - TF_MS[tf]) {
+      const k = await getJSON(`${url}?symbol=${sym}&interval=${tf}&startTime=${s}&limit=${lim}`); if (!k.length) break;
+      for (const r of k) { if (r[6] >= Date.now()) continue; d.t.push(r[0]); d.o.push(+r[1]); d.h.push(+r[2]); d.l.push(+r[3]); d.c.push(+r[4]); d.v.push(+r[5]); }
+      s = k[k.length - 1][0] + TF_MS[tf]; prog.done++; setProg(); await sleep(80); if (k.length < lim) break; }
+    await IDB.put(key, d); return d;
+  } catch (e) { if (mk === "fut") { usedSpotFallback = true; return fetchFeed(market, sym, tf, startMs, true); } throw e; }
+}
+const fk = (m, s, tf) => `${m}|${s}|${tf}`;
+function needed() { const m = new Map(); for (const v of VARS) for (const s of v.symbols) m.set(fk(v.market, s, v.tf), [v.market, s, v.tf]); for (const s of SYMS) m.set(fk("fut", s, "1d"), ["fut", s, "1d"]); return [...m.values()]; }
+let FEEDS = {};
+async function loadAll() {
+  const st = Date.parse(CFG.DATA_START + "T00:00:00Z") - 250 * 864e5, fs = needed(); prog.done = 0; prog.total = 0;
+  for (const [m, s, tf] of fs) { const mk = FORCE_SPOT ? "spot" : m, c = await IDB.get(`${mk}_${s}_${tf}`); const from = c && c.t.length && c.t[0] <= st ? c.t[c.t.length - 1] : st;
+    prog.total += Math.max(1, Math.ceil((Date.now() - from) / TF_MS[tf] / EP[mk][1])); }
+  setProg(); const q = [...fs];
+  const w = async () => { while (q.length) { const [m, s, tf] = q.shift(); FEEDS[fk(m, s, tf)] = await fetchFeed(m, s, tf, st, FORCE_SPOT); } };
+  await Promise.all([w(), w(), w()]);
+}
+
+// ---------- compute (Web Worker, fallback main thread) ----------
+const WORKER_BODY = `
+self.onmessage = e => { const { feeds, vars, cfg } = e.data; Object.assign(CFG, cfg); const out = {};
+  const S = Date.parse(cfg.DATA_START + "T00:00:00Z"), SP = Date.parse(cfg.SPLIT + "T00:00:00Z"), FW = Date.parse(cfg.FORWARD_START);
+  const daily = cv => { const m = new Map(); for (const [t, e] of cv) m.set(Math.floor(t / 864e5) * 864e5, e); return [...m]; };
+  for (const v of vars) { const data = {}; for (const s of v.symbols) data[s] = feeds[v.market + "|" + s + "|" + v.tf];
+    const warm = S + (v.tf === "1d" ? 220 : 60) * 864e5;
+    const bt = run(v, data, warm, SP, cfg.START_BALANCE, cfg), oos = run(v, data, SP, FW, cfg.START_BALANCE, cfg), fwd = run(v, data, FW, null, cfg.START_BALANCE, cfg);
+    const mb = metrics(bt.trades, bt.curve), mo = metrics(oos.trades, oos.curve), mf = fwd.curve.length ? metrics(fwd.trades, fwd.curve) : null;
+    out[v.id] = { mb, mo, mf, gate: gateStatus(mb, mo, mf, cfg.CRITERIA), open: fwd.open,
+      curves: { bt: daily(bt.curve), oos: daily(oos.curve), fwd: daily(fwd.curve) },
+      trades: { bt: bt.trades.slice(-60), oos: oos.trades.slice(-60), fwd: fwd.trades.slice(-100) } };
+    self.postMessage({ progress: v.id }); }
+  self.postMessage({ done: out }); };`;
+function computeMain() { const out = {}; const S = Date.parse(CFG.DATA_START + "T00:00:00Z"), SP = Date.parse(CFG.SPLIT + "T00:00:00Z"), FW = Date.parse(CFG.FORWARD_START);
+  const daily = cv => { const m = new Map(); for (const [t, e] of cv) m.set(Math.floor(t / 864e5) * 864e5, e); return [...m]; };
+  for (const v of VARS) { const data = {}; for (const s of v.symbols) data[s] = FEEDS[fk(v.market, s, v.tf)]; const warm = S + (v.tf === "1d" ? 220 : 60) * 864e5;
+    const bt = run(v, data, warm, SP, CFG.START_BALANCE, CFG), oos = run(v, data, SP, FW, CFG.START_BALANCE, CFG), fwd = run(v, data, FW, null, CFG.START_BALANCE, CFG);
+    const mb = metrics(bt.trades, bt.curve), mo = metrics(oos.trades, oos.curve), mf = fwd.curve.length ? metrics(fwd.trades, fwd.curve) : null;
+    out[v.id] = { mb, mo, mf, gate: gateStatus(mb, mo, mf, CFG.CRITERIA), open: fwd.open, curves: { bt: daily(bt.curve), oos: daily(oos.curve), fwd: daily(fwd.curve) },
+      trades: { bt: bt.trades.slice(-60), oos: oos.trades.slice(-60), fwd: fwd.trades.slice(-100) } }; }
+  return out; }
+function compute() {
+  return new Promise(res => {
+    let wk; try { wk = new Worker(URL.createObjectURL(new Blob([$("#engineSrc").textContent + WORKER_BODY], { type: "text/javascript" }))); } catch { return res(computeMain()); }
+    let n = 0; wk.onmessage = e => { if (e.data.progress) { n++; setProg(`Menghitung varian ${n}/10…`); $("#lb").style.width = n * 10 + "%"; } if (e.data.done) { wk.terminate(); res(e.data.done); } };
+    wk.onerror = () => { wk.terminate(); res(computeMain()); };
+    const cfg = JSON.parse(JSON.stringify(CFG)); wk.postMessage({ feeds: FEEDS, vars: VARS, cfg });
+  });
+}
+let R = {}, LIVE = {}, FNG = null, busy = false;
+async function refresh(full) {
+  if (busy) return; busy = true; $("#btnR").textContent = "…";
+  try { if (full) $("#load").style.display = "flex"; await loadAll(); setProg("Menghitung 10 varian…"); R = await compute(); await snapshot(); renderAll();
+    $("#load").style.display = "none"; const sp = FORCE_SPOT || usedSpotFallback; $("#sSrc").textContent = "Data: " + (sp ? "Spot" + (FORCE_SPOT ? "" : " (fallback)") : "Futures");
+    $("#sUpd").textContent = "Update " + new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }); LS.set("lastOk", Date.now());
+  } catch (e) { console.error(e); setProg("Gagal ambil data: " + e.message + ". Cek internet, atau aktifkan 'Paksa spot' di Setting."); $("#btnSkip").style.display = "block"; $("#sSrc").textContent = "Data: ERROR"; }
+  busy = false; $("#btnR").textContent = "↻";
+}
+
+// ---------- market ----------
+async function snapshot() {
+  for (const s of SYMS) { const d = FEEDS[fk("fut", s, "1d")]; if (!d || d.c.length < 30) continue; const n = d.c.length - 1;
+    LIVE[s] = Object.assign(LIVE[s] || {}, { ema200: ema(Float64Array.from(d.c), 200)[n], atrp: atr(d)[n] / d.c[n], close: d.c[n] }); }
+  await Promise.all(SYMS.map(async s => { try { if (FORCE_SPOT) throw 0;
+      const [t, p] = await Promise.all([getJSON(`https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=${s}`), getJSON(`https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${s}`)]);
+      Object.assign(LIVE[s], { px: +t.lastPrice, chg: +t.priceChangePercent, fr: +p.lastFundingRate });
+    } catch { try { const t = await getJSON(`https://data-api.binance.vision/api/v3/ticker/24hr?symbol=${s}`); Object.assign(LIVE[s], { px: +t.lastPrice, chg: +t.priceChangePercent }); } catch {} } }));
+  try { FNG = (await getJSON("https://api.alternative.me/fng/?limit=1")).data[0]; } catch {}
+}
+let ws = null, wsFail = 0;
+function openWS() {
+  try { if (ws) { ws.onclose = null; ws.close(); } } catch {}
+  const spot = FORCE_SPOT || wsFail >= 2, st = SYMS.map(s => s.toLowerCase() + "@miniTicker").join("/");
+  try { ws = new WebSocket((spot ? "wss://data-stream.binance.vision/stream?streams=" : "wss://fstream.binance.com/stream?streams=") + st); } catch { return; }
+  ws.onopen = () => { $("#dWs").className = "dot ok"; wsFail = spot ? wsFail : 0; };
+  ws.onmessage = m => { const d = JSON.parse(m.data).data; if (!d || !d.s) return; LIVE[d.s] = LIVE[d.s] || {}; LIVE[d.s].px = +d.c; LIVE[d.s].chg = (+d.c / +d.o - 1) * 100; thr(); };
+  ws.onerror = () => { if (!spot) wsFail++; };
+  ws.onclose = () => { $("#dWs").className = "dot warn"; if (document.visibilityState === "visible") setTimeout(openWS, 4000); };
+}
+let lt = 0; const thr = () => { const n = Date.now(); if (n - lt > 1500) { lt = n; renderMarket(); renderOpen(); } };
+
+// ---------- render ----------
+function renderAll() { renderKpi(); renderMarket(); renderOpen(); renderNextEv(); renderVars(); renderChart(); renderReview(); renderGate(); }
+function renderKpi() {
+  const a = Object.values(R); $("#kPass").textContent = a.filter(r => r.gate.status === "PASS").length + "/10";
+  $("#kOpen").textContent = a.reduce((x, r) => x + r.open.length, 0);
+  const net = a.reduce((x, r) => x + (r.mf ? r.mf.net : 0), 0); $("#kPnl").innerHTML = sgn(net, 0);
+  const fw = Date.parse(CFG.FORWARD_START), days = Math.max(0, (Date.now() - fw) / 864e5);
+  $("#kFwd").innerHTML = Date.now() < fw ? `Forward test mulai <b>${new Date(fw).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}</b>. Sebelum itu status memakai hasil OOS.`
+    : `Forward test hari ke-<b>${Math.floor(days) + 1}</b> · total trade FWD <b>${a.reduce((x, r) => x + (r.mf ? r.mf.trades : 0), 0)}</b> · butuh ≥${CFG.CRITERIA.min_trades} trade per varian untuk dinilai.`;
+}
+function renderMarket() {
+  let h = "";
+  for (const s of SYMS) { const L = LIVE[s] || {}, px = L.px ?? L.close, vs = L.ema200 ? px / L.ema200 - 1 : null;
+    h += `<div class="mk"><div class="s">${s.replace("USDT", "")} · <span class="${vs > 0 ? "up" : "dn"}">${vs > 0 ? "▲ Up" : "▼ Down"}</span>${L.atrp > .04 ? ' <span class="dn">HV</span>' : ""}</div>
+    <div class="p">${fmt(px, px < 10 ? 4 : px < 1000 ? 2 : 0)}</div>
+    <div class="r"><span>24j</span>${L.chg != null ? sgn(L.chg) + "%" : "-"}</div>
+    <div class="r"><span>Funding</span><span class="${L.fr > .0005 ? "dn" : L.fr < -.0003 ? "up" : ""}">${L.fr != null ? (L.fr * 100).toFixed(4) + "%" : "-"}</span></div>
+    <div class="r"><span>vs EMA200</span><span>${vs != null ? (vs * 100).toFixed(1) + "%" : "-"}</span></div></div>`; }
+  h += `<div class="mk"><div class="s">Fear & Greed</div><div class="p">${FNG ? FNG.value : "-"}</div><div class="r"><span>${FNG ? FNG.value_classification : ""}</span></div></div>`;
+  $("#mk").innerHTML = h;
+}
+function renderOpen() {
+  let h = "", n = 0;
+  for (const v of VARS) { const r = R[v.id]; if (!r) continue;
+    for (const p of r.open) { n++; const px = (LIVE[p.symbol] || {}).px ?? p.lastClose, u = (px - p.entry) * p.qty * p.side;
+      h += `<div class="pos"><div class="a"><span>${v.id} · ${p.symbol.replace("USDT", "")} <span class="${p.side > 0 ? "up" : "dn"}">${p.side > 0 ? "LONG" : "SHORT"}</span></span><span>${sgn(u)} <span class="mu sm">(${sgn(u / CFG.RISK)}R)</span></span></div>
+      <div class="b"><span>Entry ${fmt(p.entry, 4)}</span><span>SL ${fmt(p.sl, 4)}</span><span>TP ${p.tp ? fmt(p.tp, 4) : "trail"}</span></div></div>`; } }
+  $("#openList").innerHTML = n ? h : `<div class="mu sm">Belum ada posisi terbuka di paper forward.</div>`;
+}
+function renderNextEv() {
+  const now = Date.now(), up = RES.filter(r => r.t && Date.parse(r.t) > now).sort((a, b) => Date.parse(a.t) - Date.parse(b.t)).slice(0, 2), lv = RES.filter(r => !r.t);
+  $("#nextEv").innerHTML = [...up, ...lv.slice(0, 1)].map(r => `<div class="ev"><b>${r.d}</b> · ${r.e}<div class="x">→ ${r.a}</div></div>`).join("") || '<div class="mu sm">Tidak ada event. Tambahkan di tab Review.</div>';
+}
+let PH = "mf";
+function renderVars() {
+  let h = "";
+  for (const v of VARS) { const r = R[v.id]; if (!r) continue; const m = r[PH] || { trades: 0, net: 0, pf: 0, exp_r: 0, win_rate: 0, max_dd_pct: 0, max_losing_streak: 0, fees: 0 };
+    const dc = r.mb.exp_r > 0 ? (1 - r.mo.exp_r / r.mb.exp_r) * 100 : null;
+    h += `<div class="vc" id="vc-${v.id}"><div class="vh" data-v="${v.id}"><div class="t"><div class="n">${v.id} ${v.name}</div><div class="d">${v.profile} · ${v.tf} · ${v.symbols.map(s => s.replace("USDT", "")).join("/")}</div></div>
+      <div class="pnl">${sgn(m.net, 0)}<small>${m.trades} trade</small></div><span class="badge ${r.gate.status}">${r.gate.status === "COLLECTING" ? "COLLECT" : r.gate.status}</span></div>
+      <div class="vb"><div class="mg">
+        <div><b>${fmt(Math.min(m.pf, 99))}</b><span>Profit factor</span></div><div><b>${sgn(m.exp_r)}</b><span>Expectancy R</span></div><div><b>${fmt(m.win_rate * 100, 0)}%</b><span>Win rate</span></div>
+        <div><b>${fmt(m.max_dd_pct, 1)}%</b><span>Max DD</span></div><div><b>${m.max_losing_streak}</b><span>Kalah beruntun</span></div><div><b>${fmt(m.fees, 0)}</b><span>Fee USDT</span></div></div>
+        <div class="row"><span class="mu">Basis status</span><span>${r.gate.basis}</span></div>
+        <div class="row"><span class="mu">BT → OOS ExpR</span><span>${fmt(r.mb.exp_r)} → ${fmt(r.mo.exp_r)} ${dc != null ? `<span class="mu">(decay ${dc.toFixed(0)}%)</span>` : ""}</span></div>
+        <div class="row"><span class="mu">Logika</span><span>${v.logic} n=${v.n} · SL ${v.sl_atr}ATR · ${v.tp_r ? "TP " + v.tp_r + "R" : "trail " + v.trail_atr + "ATR"}</span></div>
+        <div class="row"><span class="mu">Batas</span><span>${v.max_pos} posisi · ${v.max_lev}x · day cap ${v.day_cap}</span></div>
+        <button class="btn sec" data-ch="${v.id}">Lihat grafik & trade</button></div></div>`; }
+  $("#vList").innerHTML = h;
+  $$("[data-v]").forEach(e => e.onclick = () => $("#vc-" + e.dataset.v).classList.toggle("open"));
+  $$("[data-ch]").forEach(e => e.onclick = () => { $("#chV").value = e.dataset.ch; go("chart"); });
+}
+let CPH = "fwd";
+function renderChart() {
+  const sel = $("#chV"); if (!sel.options.length) sel.innerHTML = '<option value="ALL">Semua varian</option>' + VARS.map(v => `<option value="${v.id}">${v.id} ${v.name}</option>`).join("");
+  const cv = $("#cv"), dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 340, H = 220; cv.width = W * dpr; cv.height = H * dpr;
+  const x = cv.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
+  const COL = ["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#22d3ee", "#fb923c", "#e879f9", "#94a3b8", "#facc15"];
+  const ids = sel.value === "ALL" ? VARS.map(v => v.id) : [sel.value], series = ids.map(id => (R[id] ? R[id].curves[CPH] : [])).filter(s => s.length);
+  if (!series.length) { x.fillStyle = "#8b98a9"; x.font = "13px sans-serif"; x.fillText("Belum ada data untuk fase ini.", 10, 30); $("#chInfo").textContent = ""; renderTr(); return; }
+  let t0 = Infinity, t1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const s of series) for (const [t, e] of s) { t0 = Math.min(t0, t); t1 = Math.max(t1, t); y0 = Math.min(y0, e); y1 = Math.max(y1, e); }
+  if (y1 - y0 < 1) { y0 -= 5; y1 += 5; } const pl = 44, pr = 8, pt = 8, pb = 22, X = t => pl + (t - t0) / Math.max(1, t1 - t0) * (W - pl - pr), Y = e => pt + (1 - (e - y0) / (y1 - y0)) * (H - pt - pb);
+  x.strokeStyle = "#2b3442"; x.fillStyle = "#8b98a9"; x.font = "10px sans-serif"; x.lineWidth = 1;
+  for (let k = 0; k <= 4; k++) { const v = y0 + (y1 - y0) * k / 4, yy = Y(v); x.beginPath(); x.moveTo(pl, yy); x.lineTo(W - pr, yy); x.stroke(); x.fillText(fmt(v, 0), 2, yy + 3); }
+  if (CFG.START_BALANCE >= y0 && CFG.START_BALANCE <= y1) { x.setLineDash([4, 4]); x.strokeStyle = "#8b98a9"; x.beginPath(); x.moveTo(pl, Y(CFG.START_BALANCE)); x.lineTo(W - pr, Y(CFG.START_BALANCE)); x.stroke(); x.setLineDash([]); }
+  x.fillText(new Date(t0).toISOString().slice(0, 10), pl, H - 6); const e1 = new Date(t1).toISOString().slice(0, 10); x.fillText(e1, W - pr - x.measureText(e1).width, H - 6);
+  ids.forEach((id, k) => { const s = R[id] ? R[id].curves[CPH] : []; if (!s.length) return; x.strokeStyle = COL[VARS.findIndex(v => v.id === id)]; x.lineWidth = ids.length > 1 ? 1.3 : 2; x.beginPath();
+    s.forEach(([t, e], i) => i ? x.lineTo(X(t), Y(e)) : x.moveTo(X(t), Y(e))); x.stroke(); });
+  $("#chInfo").innerHTML = ids.length > 1 ? VARS.map((v, k) => `<span style="color:${COL[k]}">■</span> ${v.id}`).join(" &nbsp;") : (() => { const s = R[ids[0]].curves[CPH]; return `Equity akhir <b>${fmt(s[s.length - 1][1])}</b> USDT`; })();
+  renderTr();
+}
+function renderTr() {
+  const id = $("#chV").value; if (id === "ALL") { $("#trList").innerHTML = '<div class="mu sm">Pilih satu varian untuk melihat trade.</div>'; return; }
+  const t = (R[id] ? R[id].trades[CPH] : []).slice().reverse(), d = ms => new Date(ms + 7 * 36e5).toISOString().slice(5, 16).replace("T", " ");
+  $("#trList").innerHTML = t.length ? t.slice(0, 50).map(x => `<div class="tr"><span>${d(x.exit_time)} · ${x.symbol.replace("USDT", "")} <span class="${x.side === "LONG" ? "up" : "dn"}">${x.side[0]}</span> · <span class="mu">${x.reason}</span></span><span>${sgn(x.pnl)} <span class="mu">${fmt(x.R, 1)}R</span></span></div>`).join("") + '<div class="mu sm" style="margin-top:6px">Maks 50 trade terakhir · waktu WIB</div>'
+    : '<div class="mu sm">Belum ada trade.</div>';
+}
+let RES_EDIT = false;
+function renderReview() {
+  const td = wibDate(), done = LS.get("chk_" + td, []);
+  $("#chk").innerHTML = CHK.map((c, i) => `<label><input type="checkbox" data-c="${i}" ${done.includes(i) ? "checked" : ""}>${c}</label>`).join("");
+  $$("[data-c]").forEach(e => e.onchange = () => { const a = new Set(LS.get("chk_" + td, [])); e.checked ? a.add(+e.dataset.c) : a.delete(+e.dataset.c); LS.set("chk_" + td, [...a]); });
+  const esc = s => String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  $("#resList").innerHTML = RES_EDIT ? RES.map((r, i) => `<div class="ev">${[["d", "Tanggal"], ["e", "Event"], ["w", "Kenapa penting"], ["a", "Aksi bot"], ["t", "Waktu (ISO, opsional) mis. 2026-10-14T19:30+07:00"]].map(([k, l]) => `<input data-r="${i}" data-k="${k}" placeholder="${l}" value="${esc(r[k])}">`).join("")}<button class="btn sec" data-del="${i}">Hapus</button></div>`).join("") + '<button class="btn sec" id="resAdd">+ Tambah event</button><button class="btn sec" id="resDef">Reset ke default</button>'
+    : RES.map(r => `<div class="ev"><b>${esc(r.d)}</b> · ${esc(r.e)}<div class="w">${esc(r.w)}</div><div class="x">→ ${esc(r.a)}</div></div>`).join("");
+  $("#btnResEdit").textContent = RES_EDIT ? "✔ Selesai edit" : "✎ Edit riset";
+  $$("[data-r]").forEach(e => e.onchange = () => { RES[e.dataset.r][e.dataset.k] = e.value; LS.set("research", RES); renderNextEv(); });
+  $$("[data-del]").forEach(e => e.onclick = () => { RES.splice(+e.dataset.del, 1); LS.set("research", RES); renderReview(); });
+  if ($("#resAdd")) { $("#resAdd").onclick = () => { RES.push({ d: "", e: "", w: "", a: "", t: "" }); LS.set("research", RES); renderReview(); }; $("#resDef").onclick = () => { RES = JSON.parse(JSON.stringify(DEF_RES)); LS.set("research", RES); renderReview(); }; }
+  $("#logList").innerHTML = LOG.length ? LOG.slice().reverse().slice(0, 30).map(l => `<div class="row" style="display:block"><b>${l.date}</b> <span class="badge PASS">${l.pass}</span> <span class="badge FAIL">${l.fail}</span> <span class="badge COLLECTING">${l.col}</span><div class="sm mu" style="margin-top:3px">${esc(l.note)}</div></div>`).join("") : '<div class="mu sm">Belum ada review tersimpan.</div>';
+}
+function renderGate() {
+  const L = { min_trades: "Min trade", min_pf: "Min profit factor", min_exp_r: "Min expectancy (R)", max_dd_pct: "Max drawdown %", max_decay: "Max decay vs backtest (0.5 = 50%)" };
+  $("#gateBox").innerHTML = Object.keys(L).map(k => `<div class="fld"><label>${L[k]}</label><input type="number" inputmode="decimal" step="0.01" data-g="${k}" value="${CFG.CRITERIA[k]}"></div>`).join("");
+  $$("[data-g]").forEach(e => e.onchange = () => { CFG.CRITERIA[e.dataset.g] = +e.value; LS.set("crit", CFG.CRITERIA); for (const id in R) R[id].gate = gateStatus(R[id].mb, R[id].mo, R[id].mf, CFG.CRITERIA); renderKpi(); renderVars(); toast("Gate diperbarui"); });
+}
+function renderSet() {
+  const F = [["FORWARD_START", "Forward start (ISO UTC)", "text"], ["DATA_START", "Mulai backtest", "text"], ["SPLIT", "Split BT/OOS", "text"], ["RISK", "Risk per trade (USDT)", "number"], ["START_BALANCE", "Modal paper per varian", "number"], ["FEE_FUT", "Fee futures / sisi", "number"], ["SLIP", "Slippage / sisi", "number"]];
+  $("#setBox").innerHTML = F.map(([k, l, t]) => `<div class="fld"><label>${l}</label><input type="${t}" ${t === "number" ? 'inputmode="decimal" step="any"' : ""} data-s="${k}" value="${CFG[k]}"></div>`).join("");
+  $("#fs").checked = FORCE_SPOT;
+}
+
+// ---------- nav & events ----------
+function go(p) { $$("#nav a").forEach(a => a.classList.toggle("on", a.dataset.p === p)); $$(".pg").forEach(s => s.classList.toggle("on", s.id === "p-" + p)); window.scrollTo(0, 0); if (p === "chart") renderChart(); }
+$$("#nav a").forEach(a => a.onclick = () => go(a.dataset.p));
+$$("#segPh a").forEach(a => a.onclick = () => { $$("#segPh a").forEach(b => b.classList.toggle("on", b === a)); PH = a.dataset.ph; renderVars(); });
+$$("#segCh a").forEach(a => a.onclick = () => { $$("#segCh a").forEach(b => b.classList.toggle("on", b === a)); CPH = a.dataset.ph; renderChart(); });
+$("#chV").onchange = renderChart; $("#btnR").onclick = () => refresh(false); $("#btnSkip").onclick = () => $("#load").style.display = "none";
+$("#btnResEdit").onclick = () => { RES_EDIT = !RES_EDIT; renderReview(); };
+$("#btnLog").onclick = () => { const c = s => Object.values(R).filter(r => r.gate.status === s).length; LOG = LOG.filter(l => l.date !== wibDate());
+  LOG.push({ date: wibDate(), pass: c("PASS"), fail: c("FAIL"), col: c("COLLECTING"), note: $("#note").value }); LS.set("log", LOG); $("#note").value = ""; renderReview(); toast("Review tersimpan"); };
+$("#btnSave").onclick = () => { $$("[data-s]").forEach(e => CFG[e.dataset.s] = e.type === "number" ? +e.value : e.value);
+  const c = {}; for (const k of ["FORWARD_START", "DATA_START", "SPLIT", "RISK", "START_BALANCE", "FEE_FUT", "SLIP"]) c[k] = CFG[k]; LS.set("cfg", c);
+  FORCE_SPOT = $("#fs").checked; LS.set("forceSpot", FORCE_SPOT); openWS(); refresh(true); };
+$("#btnClear").onclick = async () => { if (!confirm("Hapus semua data candle tersimpan? Data akan diunduh ulang.")) return; await IDB.clear(); FEEDS = {}; refresh(true); };
+window.addEventListener("resize", () => { if ($("#p-chart").classList.contains("on")) renderChart(); });
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { if (!ws || ws.readyState > 1) openWS(); if (Date.now() - LS.get("lastOk", 0) > 60000) refresh(false); } });
+function tick() { const now = new Date(Date.now() + 7 * 36e5), nx = new Date(now); nx.setUTCHours(8, 0, 0, 0); if (nx <= now) nx.setUTCDate(nx.getUTCDate() + 1);
+  const ms = nx - now; $("#sRev").textContent = `Review 08:00 dlm ${Math.floor(ms / 36e5)}j ${Math.floor(ms % 36e5 / 6e4)}m`; }
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+(async () => { await IDB.open(); try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch {}
+  renderSet(); renderReview(); renderGate(); renderNextEv(); tick(); setInterval(tick, 30000); openWS(); await refresh(true);
+  setInterval(() => { if (document.visibilityState === "visible") refresh(false); }, 60000); })();
+</script>
+</body>
+</html>
